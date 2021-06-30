@@ -53,6 +53,7 @@
 #include "memory/filemap.hpp"
 #include "memory/iterator.hpp"
 #include "memory/metaspaceCounters.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/oop.inline.hpp"
 #include "runtime/biasedLocking.hpp"
@@ -650,7 +651,7 @@ void GenCollectedHeap::do_collection(bool           full,
     complete = complete || collected_old;
 
     print_heap_change(young_prev_used, old_prev_used);
-    MetaspaceUtils::print_metaspace_change(metadata_prev_used);
+    // MetaspaceUtils::print_metaspace_change(metadata_prev_used);
 
     // Adjust generation sizes.
     if (collected_old) {
@@ -661,7 +662,7 @@ void GenCollectedHeap::do_collection(bool           full,
     if (complete) {
       // Delete metaspaces for unloaded class loaders and clean up loader_data graph
       ClassLoaderDataGraph::purge();
-      MetaspaceUtils::verify_metrics();
+      DEBUG_ONLY(MetaspaceUtils::verify();)
       // Resize the metaspace capacity after full collections
       MetaspaceGC::compute_new_size();
       update_full_collections_completed();

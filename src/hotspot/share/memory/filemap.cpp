@@ -902,7 +902,9 @@ char* FileMapInfo::map_region(int i, char** top_ret) {
     return NULL;
   }
 
-  *top_ret = base + size;
+  // *top_ret = base + size;
+  *top_ret = (char*)align_up(base + size, Metaspace::reserve_alignment());
+  // *top_ret = (char*)align_up(base + size, alignment);
   return base;
 }
 

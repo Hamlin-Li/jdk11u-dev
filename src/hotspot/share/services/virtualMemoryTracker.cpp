@@ -25,6 +25,7 @@
 
 #include "logging/log.hpp"
 #include "memory/metaspace.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "runtime/atomic.hpp"
 #include "runtime/os.hpp"
 #include "runtime/threadCritical.hpp"
@@ -615,10 +616,9 @@ void MetaspaceSnapshot::snapshot(Metaspace::MetadataType type, MetaspaceSnapshot
   mss._committed_in_bytes[type]  = MetaspaceUtils::committed_bytes(type);
   mss._used_in_bytes[type]       = MetaspaceUtils::used_bytes(type);
 
-  size_t free_in_bytes = (MetaspaceUtils::capacity_bytes(type) - MetaspaceUtils::used_bytes(type))
-                       + MetaspaceUtils::free_chunks_total_bytes(type)
-                       + MetaspaceUtils::free_in_vs_bytes(type);
-  mss._free_in_bytes[type] = free_in_bytes;
+  // The answer to "what is free" in metaspace is complex and cannot be answered with a single number.
+  // Free as in available to all loaders? Free, pinned to one loader? For now, keep it simple.
+  mss._free_in_bytes[type] = mss._committed_in_bytes[type] - mss._used_in_bytes[type];
 }
 
 void MetaspaceSnapshot::snapshot(MetaspaceSnapshot& mss) {

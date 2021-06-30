@@ -207,7 +207,7 @@ bool oopDesc::is_valid(oop obj) {
   Klass* k = (Klass*)load_klass_raw(obj);
 
   if (!os::is_readable_range(k, k + 1)) return false;
-  return MetaspaceUtils::is_range_in_committed(k, k + 1);
+  return Metaspace::contains(k);
 }
 
 oop oopDesc::oop_or_null(address addr) {

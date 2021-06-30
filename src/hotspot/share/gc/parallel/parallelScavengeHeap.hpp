@@ -37,7 +37,7 @@
 #include "gc/shared/gcWhen.hpp"
 #include "gc/shared/softRefPolicy.hpp"
 #include "gc/shared/strongRootsScope.hpp"
-#include "memory/metaspace.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "utilities/growableArray.hpp"
 #include "utilities/ostream.hpp"
 

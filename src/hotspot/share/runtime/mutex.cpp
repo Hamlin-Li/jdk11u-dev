@@ -930,18 +930,22 @@ void Monitor::lock() {
 // that is guaranteed not to block while running inside the VM. If this is called with
 // thread state set to be in VM, the safepoint synchronization code will deadlock!
 
-void Monitor::lock_without_safepoint_check(Thread * Self) {
+void Monitor::lock_without_safepoint_check(Thread * Self, bool log) {
   // Ensure that the Monitor does not require or allow safepoint checks.
   assert(_safepoint_check_required != Monitor::_safepoint_check_always,
          "This lock should always have a safepoint check: %s", name());
+  if (log) {
+    log_error(gc)("============== lock_without_safepoint_check ========");
+    log_error(gc)("============== _owner" INTPTRNZ_FORMAT ", " INTPTRNZ_FORMAT " ========", (intptr_t)_owner, (intptr_t)Self);
+  }
   assert(_owner != Self, "invariant");
   ILock(Self);
   assert(_owner == NULL, "invariant");
   set_owner(Self);
 }
 
-void Monitor::lock_without_safepoint_check() {
-  lock_without_safepoint_check(Thread::current());
+void Monitor::lock_without_safepoint_check(bool log) {
+  lock_without_safepoint_check(Thread::current(), log);
 }
 
 

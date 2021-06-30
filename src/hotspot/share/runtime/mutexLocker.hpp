@@ -145,7 +145,8 @@ extern Mutex*   JfrStream_lock;                  // protects JFR stream access
 extern Mutex*   UnsafeJlong_lock;                // provides Unsafe atomic updates to jlongs on platforms that don't support cx8
 #endif
 
-extern Mutex*   MetaspaceExpand_lock;            // protects Metaspace virtualspace and chunk expansions
+extern Mutex*   Metaspace_lock;            // protects Metaspace virtualspace and chunk expansions
+extern Mutex*   ClassLoaderDataGraph_lock;       // protects CLDG list, needed for concurrent unloading
 
 
 extern Monitor* CodeHeapStateAnalytics_lock;     // lock print functions against concurrent analyze functions.
@@ -216,13 +217,13 @@ class MutexLockerEx: public StackObj {
  private:
   Monitor * _mutex;
  public:
-  MutexLockerEx(Monitor * mutex, bool no_safepoint_check = !Mutex::_no_safepoint_check_flag) {
+  MutexLockerEx(Monitor * mutex, bool no_safepoint_check = !Mutex::_no_safepoint_check_flag, bool log = false) {
     _mutex = mutex;
     if (_mutex != NULL) {
       assert(mutex->rank() > Mutex::special || no_safepoint_check,
         "Mutexes with rank special or lower should not do safepoint checks");
       if (no_safepoint_check)
-        _mutex->lock_without_safepoint_check();
+        _mutex->lock_without_safepoint_check(log);
       else
         _mutex->lock();
     }

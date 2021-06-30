@@ -2089,10 +2089,22 @@ bool MetaspaceShared::map_shared_spaces(FileMapInfo* mapinfo) {
     // would mess up the simple comparision in MetaspaceShared::is_in_shared_metaspace().
     assert(mc_base < ro_base && mc_base < rw_base && mc_base < md_base && mc_base < od_base, "must be");
     assert(od_top  > ro_top  && od_top  > rw_top  && od_top  > md_top  && od_top  > mc_top , "must be");
-    assert(mc_top == rw_base, "must be");
-    assert(rw_top == ro_base, "must be");
-    assert(ro_top == md_base, "must be");
-    assert(md_top == od_base, "must be");
+    assert(mc_top == rw_base && rw_top == ro_base && ro_top == md_base && md_top == od_base,
+           "must be, "
+           "mc_base: " SIZE_FORMAT_HEX ". \n"
+           "mc_top: " SIZE_FORMAT_HEX ", rw_base: " SIZE_FORMAT_HEX ". \n"
+           "rw_top: " SIZE_FORMAT_HEX ", ro_base: " SIZE_FORMAT_HEX ". \n"
+           "ro_top: " SIZE_FORMAT_HEX ", md_base: " SIZE_FORMAT_HEX ". \n"
+           "md_top: " SIZE_FORMAT_HEX ", od_base: " SIZE_FORMAT_HEX ". \n"
+           , (size_t) mc_base
+           , (size_t)mc_top, (size_t)rw_base,
+           (size_t)rw_top, (size_t)ro_base,
+           (size_t)ro_top, (size_t)md_base,
+           (size_t)md_top, (size_t)od_base);
+    assert(mc_top == rw_base, "must be, mc_top: " SIZE_FORMAT_HEX ", rw_base: " SIZE_FORMAT_HEX ".", (size_t)mc_top, (size_t)rw_base);
+    assert(rw_top == ro_base, "must be, rw_top: " SIZE_FORMAT_HEX ", ro_base: " SIZE_FORMAT_HEX ".", (size_t)rw_top, (size_t)ro_base);
+    assert(ro_top == md_base, "must be, ro_top: " SIZE_FORMAT_HEX ", md_base: " SIZE_FORMAT_HEX ".", (size_t)ro_top, (size_t)md_base);
+    assert(md_top == od_base, "must be, md_top: " SIZE_FORMAT_HEX ", od_base: " SIZE_FORMAT_HEX ".", (size_t)md_top, (size_t)od_base);
 
     MetaspaceObj::set_shared_metaspace_range((void*)mc_base, (void*)od_top);
     return true;

@@ -221,8 +221,8 @@ class Monitor : public CHeapObj<mtSynchronizer> {
 
   // Lock without safepoint check. Should ONLY be used by safepoint code and other code
   // that is guaranteed not to block while running inside the VM.
-  void lock_without_safepoint_check();
-  void lock_without_safepoint_check (Thread * Self) ;
+  void lock_without_safepoint_check(bool log = false);
+  void lock_without_safepoint_check (Thread * Self, bool log = false) ;
 
   // Current owner - not not MT-safe. Can only be used to guarantee that
   // the current running thread owns the lock

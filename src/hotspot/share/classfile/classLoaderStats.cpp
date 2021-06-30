@@ -25,6 +25,7 @@
 #include "precompiled.hpp"
 #include "classfile/classLoaderData.inline.hpp"
 #include "classfile/classLoaderStats.hpp"
+#include "memory/classLoaderMetaspace.hpp"
 #include "oops/oop.inline.hpp"
 #include "utilities/globalDefinitions.hpp"
 
@@ -79,15 +80,17 @@ void ClassLoaderStatsClosure::do_cld(ClassLoaderData* cld) {
 
   ClassLoaderMetaspace* ms = cld->metaspace_or_null();
   if (ms != NULL) {
+    size_t used_bytes, capacity_bytes;
+    ms->calculate_jfr_stats(&used_bytes, &capacity_bytes);
     if(cld->is_anonymous()) {
-      cls->_anon_chunk_sz += ms->allocated_chunks_bytes();
-      cls->_anon_block_sz += ms->allocated_blocks_bytes();
+      cls->_anon_chunk_sz += capacity_bytes;
+      cls->_anon_block_sz += used_bytes;
     } else {
-      cls->_chunk_sz = ms->allocated_chunks_bytes();
-      cls->_block_sz = ms->allocated_blocks_bytes();
+      cls->_chunk_sz = capacity_bytes;
+      cls->_block_sz = used_bytes;
     }
-    _total_chunk_sz += ms->allocated_chunks_bytes();
-    _total_block_sz += ms->allocated_blocks_bytes();
+    _total_chunk_sz += capacity_bytes;
+    _total_block_sz += used_bytes;
   }
 }
 

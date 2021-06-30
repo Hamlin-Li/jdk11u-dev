@@ -26,7 +26,7 @@
  * @library /runtime/testlibrary
  * @modules java.base/jdk.internal.misc
  * @modules java.compiler
- * @run main/othervm/timeout=200 -Xmx300m FragmentMetaspace
+ * @run main/othervm/timeout=200 -Xmx300m -Xlog:gc FragmentMetaspace
  */
 
 import java.io.IOException;

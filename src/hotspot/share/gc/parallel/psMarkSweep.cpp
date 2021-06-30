@@ -252,7 +252,7 @@ bool PSMarkSweep::invoke_no_policy(bool clear_all_softrefs) {
 
     // Delete metaspaces for unloaded class loaders and clean up loader_data graph
     ClassLoaderDataGraph::purge();
-    MetaspaceUtils::verify_metrics();
+    DEBUG_ONLY(MetaspaceUtils::verify();)
 
     BiasedLocking::restore_marks();
     CodeCache::gc_epilogue();
@@ -353,7 +353,7 @@ bool PSMarkSweep::invoke_no_policy(bool clear_all_softrefs) {
 
     young_gen->print_used_change(young_gen_prev_used);
     old_gen->print_used_change(old_gen_prev_used);
-    MetaspaceUtils::print_metaspace_change(metadata_prev_used);
+    // MetaspaceUtils::print_metaspace_change(metadata_prev_used); // TODO
 
     // Track memory usage and detect low memory
     MemoryService::track_memory_usage();

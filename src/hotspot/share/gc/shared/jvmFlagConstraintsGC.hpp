@@ -58,7 +58,6 @@ JVMFlag::Error MaxTenuringThresholdConstraintFunc(uintx value, bool verbose);
 
 JVMFlag::Error MaxGCPauseMillisConstraintFunc(uintx value, bool verbose);
 JVMFlag::Error GCPauseIntervalMillisConstraintFunc(uintx value, bool verbose);
-JVMFlag::Error InitialBootClassLoaderMetaspaceSizeConstraintFunc(size_t value, bool verbose);
 JVMFlag::Error InitialHeapSizeConstraintFunc(size_t value, bool verbose);
 JVMFlag::Error MaxHeapSizeConstraintFunc(size_t value, bool verbose);
 JVMFlag::Error HeapBaseMinAddressConstraintFunc(size_t value, bool verbose);

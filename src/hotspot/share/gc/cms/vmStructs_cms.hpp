@@ -70,7 +70,6 @@
   declare_toplevel_type(CMSCollector)                                     \
   declare_toplevel_type(CMSBitMap)                                        \
   declare_toplevel_type(FreeChunk)                                        \
-  declare_toplevel_type(metaspace::Metablock)                             \
   declare_toplevel_type(ConcurrentMarkSweepThread*)                       \
   declare_toplevel_type(ConcurrentMarkSweepGeneration*)                   \
   declare_toplevel_type(CompactibleFreeListSpace*)                        \

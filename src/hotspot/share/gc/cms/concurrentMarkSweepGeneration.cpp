@@ -66,6 +66,7 @@
 #include "memory/allocation.hpp"
 #include "memory/binaryTreeDictionary.inline.hpp"
 #include "memory/iterator.inline.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "memory/padded.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/access.inline.hpp"

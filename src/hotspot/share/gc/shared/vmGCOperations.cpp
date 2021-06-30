@@ -32,6 +32,7 @@
 #include "gc/shared/vmGCOperations.hpp"
 #include "interpreter/oopMapCache.hpp"
 #include "logging/log.hpp"
+#include "memory/classLoaderMetaspace.hpp"
 #include "memory/oopFactory.hpp"
 #include "runtime/handles.inline.hpp"
 #include "runtime/init.hpp"

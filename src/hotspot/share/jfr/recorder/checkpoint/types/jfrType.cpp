@@ -39,7 +39,7 @@
 #include "jfr/support/jfrThreadLocal.hpp"
 #include "jfr/writers/jfrJavaEventWriter.hpp"
 #include "memory/iterator.hpp"
-#include "memory/metaspaceGCThresholdUpdater.hpp"
+#include "memory/metaspace.hpp"
 #include "memory/referenceType.hpp"
 #include "memory/universe.hpp"
 #include "runtime/flags/jvmFlag.hpp"

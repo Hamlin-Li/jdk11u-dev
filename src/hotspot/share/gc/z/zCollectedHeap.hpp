@@ -34,6 +34,7 @@
 #include "gc/z/zHeap.hpp"
 #include "gc/z/zRuntimeWorkers.hpp"
 #include "gc/z/zStat.hpp"
+#include "memory/metaspace.hpp"
 
 class ZCollectedHeap : public CollectedHeap {
   friend class VMStructs;

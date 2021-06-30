@@ -27,7 +27,7 @@
 
 #include "memory/allocation.hpp"
 #include "memory/metaspace.hpp"
-#include "memory/metaspaceGCThresholdUpdater.hpp"
+#include "memory/metaspaceUtils.hpp"
 
 class ClassLoaderData;
 

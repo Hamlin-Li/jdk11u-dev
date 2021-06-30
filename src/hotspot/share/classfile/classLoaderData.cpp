@@ -59,7 +59,9 @@
 #include "logging/log.hpp"
 #include "logging/logStream.hpp"
 #include "memory/allocation.inline.hpp"
+#include "memory/classLoaderMetaspace.hpp"
 #include "memory/metadataFactory.hpp"
+#include "memory/metaspace.hpp"
 #include "memory/metaspaceShared.hpp"
 #include "memory/resourceArea.hpp"
 #include "memory/universe.hpp"
@@ -1009,9 +1011,11 @@ void ClassLoaderData::verify() {
   guarantee(cl != NULL || this == ClassLoaderData::the_null_class_loader_data() || is_anonymous(), "must be");
 
   // Verify the integrity of the allocated space.
+#ifdef ASSERT
   if (metaspace_or_null() != NULL) {
     metaspace_or_null()->verify();
   }
+#endif
 
   for (Klass* k = _klasses; k != NULL; k = k->next_link()) {
     guarantee(k->class_loader_data() == this, "Must be the same");
@@ -1146,6 +1150,46 @@ void ClassLoaderDataGraph::always_strong_cld_do(CLDClosure* cl) {
     keep_alive_cld_do(cl);
   } else {
     cld_do(cl);
+  }
+}
+
+// Iterating over the CLDG needs to be locked because
+// unloading can remove entries concurrently soon.
+ class ClassLoaderDataGraphIterator : public StackObj {
+   ClassLoaderData* _next;
+   Thread*          _thread;
+   HandleMark       _hm;  // clean up handles when this is done.
+   Handle           _holder;
+   NoSafepointVerifier _nsv; // No safepoints allowed in this scope
+   // unless verifying at a safepoint.
+
+ public:
+   ClassLoaderDataGraphIterator() : _next(ClassLoaderDataGraph::_head), _thread(Thread::current()), _hm(_thread) {
+     _thread = Thread::current();
+     assert_locked_or_safepoint(ClassLoaderDataGraph_lock);
+   }
+
+   ClassLoaderData* get_next() {
+     ClassLoaderData* cld = _next;
+     // Skip already unloaded CLD for concurrent unloading.
+     while (cld != NULL && !cld->is_alive()) {
+       cld = cld->next();
+     }
+     if (cld != NULL) {
+       // Keep cld that is being returned alive.
+       _holder = Handle(_thread, cld->holder_phantom());
+       _next = cld->next();
+     } else {
+       _next = NULL;
+     }
+     return cld;
+   }
+ };
+
+void ClassLoaderDataGraph::loaded_cld_do(CLDClosure* cl) {
+  ClassLoaderDataGraphIterator iter;
+  while (ClassLoaderData* cld = iter.get_next()) {
+    cl->do_cld(cld);
   }
 }
 

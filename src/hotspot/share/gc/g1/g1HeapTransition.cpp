@@ -29,12 +29,12 @@
 #include "logging/log.hpp"
 #include "memory/metaspace.hpp"
 
-G1HeapTransition::Data::Data(G1CollectedHeap* g1_heap) {
-  _eden_length = g1_heap->eden_regions_count();
-  _survivor_length = g1_heap->survivor_regions_count();
-  _old_length = g1_heap->old_regions_count();
-  _humongous_length = g1_heap->humongous_regions_count();
-  _metaspace_used_bytes = MetaspaceUtils::used_bytes();
+G1HeapTransition::Data::Data(G1CollectedHeap* g1_heap) :
+  _eden_length(g1_heap->eden_regions_count()),
+  _survivor_length(g1_heap->survivor_regions_count()),
+  _old_length(g1_heap->old_regions_count()),
+  _humongous_length(g1_heap->humongous_regions_count()),
+  _meta_sizes(MetaspaceUtils::get_combined_statistics()) {
 }
 
 G1HeapTransition::G1HeapTransition(G1CollectedHeap* g1_heap) : _g1_heap(g1_heap), _before(g1_heap) { }
@@ -117,5 +117,5 @@ void G1HeapTransition::print() {
   log_trace(gc, heap)(" Used: " SIZE_FORMAT "K, Waste: " SIZE_FORMAT "K",
       usage._humongous_used / K, ((after._humongous_length * HeapRegion::GrainBytes) - usage._humongous_used) / K);
 
-  MetaspaceUtils::print_metaspace_change(_before._metaspace_used_bytes);
+  MetaspaceUtils::print_metaspace_change(_before._meta_sizes);
 }

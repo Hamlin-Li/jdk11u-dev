@@ -33,7 +33,9 @@
 #include "gc/shenandoah/shenandoahEvacOOMHandler.hpp"
 #include "gc/shenandoah/shenandoahPadding.hpp"
 #include "gc/shenandoah/shenandoahSharedVariables.hpp"
+#include "memory/metaspace.hpp"
 #include "services/memoryManager.hpp"
+
 
 class ConcurrentGCTimer;
 class ReferenceProcessor;

@@ -1075,7 +1075,6 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
           NOT_LP64(2200*K) LP64_ONLY(4*M),                                  \
           "Initial size of the boot class loader data metaspace")           \
           range(30*K, max_uintx/BytesPerWord)                               \
-          constraint(InitialBootClassLoaderMetaspaceSizeConstraintFunc, AfterErgo)\
                                                                             \
   product(bool, PrintHeapAtSIGBREAK, true,                                  \
           "Print heap layout in response to SIGBREAK")                      \
@@ -1823,6 +1822,15 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
           "Maximum size of class area in Metaspace when compressed "        \
           "class pointers are used")                                        \
           range(1*M, 3*G)                                                   \
+                                                                            \
+  product(ccstr, MetaspaceReclaimPolicy, "balanced",                        \
+          "options: balanced, aggressive, none")                            \
+                                                                            \
+  diagnostic(bool, MetaspaceGuardAllocations, false,                        \
+          "Metapace allocations are guarded.")                              \
+                                                                            \
+  diagnostic(bool, MetaspaceHandleDeallocations, true,                         \
+          "Switch off Metapace deallocation handling.")                     \
                                                                             \
   manageable(uintx, MinHeapFreeRatio, 40,                                   \
           "The minimum percentage of heap free after GC to avoid expansion."\
@@ -2663,6 +2671,10 @@ define_pd_global(uint64_t,MaxRAM,                    1ULL*G);
                                                                             \
   develop(bool, VerifyMetaspace, false,                                     \
           "Verify metaspace on chunk movements.")                           \
+                                                                            \
+  develop(int, VerifyMetaspaceInterval, DEBUG_ONLY(500) NOT_DEBUG(0),       \
+               "Run periodic metaspace verifications (0 - none, "           \
+               "1 - always, >1 every nth interval)")                        \
                                                                             \
   diagnostic(bool, ShowRegistersOnAssert, false,                            \
           "On internal errors, include registers in error report.")         \

@@ -32,6 +32,7 @@
 #include "gc/z/zStat.hpp"
 #include "gc/z/zTracer.inline.hpp"
 #include "gc/z/zUtils.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "memory/resourceArea.hpp"
 #include "runtime/atomic.hpp"
 #include "runtime/os.hpp"
@@ -1133,10 +1134,9 @@ void ZStatNMethods::print() {
 //
 void ZStatMetaspace::print() {
   log_info(gc, metaspace)("Metaspace: "
-                          SIZE_FORMAT "M used, " SIZE_FORMAT "M capacity, "
+                          SIZE_FORMAT "M used, "
                           SIZE_FORMAT "M committed, " SIZE_FORMAT "M reserved",
                           MetaspaceUtils::used_bytes() / M,
-                          MetaspaceUtils::capacity_bytes() / M,
                           MetaspaceUtils::committed_bytes() / M,
                           MetaspaceUtils::reserved_bytes() / M);
 }

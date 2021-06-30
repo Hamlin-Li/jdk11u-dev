@@ -62,6 +62,7 @@ class ModuleEntryTable;
 class PackageEntryTable;
 class DictionaryEntry;
 class Dictionary;
+class ClassLoaderMetaspace;
 
 // GC root for walking class loader data created
 
@@ -70,6 +71,7 @@ class ClassLoaderDataGraph : public AllStatic {
   friend class ClassLoaderDataGraphMetaspaceIterator;
   friend class ClassLoaderDataGraphKlassIteratorAtomic;
   friend class ClassLoaderDataGraphKlassIteratorStatic;
+  friend class ClassLoaderDataGraphIterator;
   friend class VMStructs;
  private:
   // All CLDs (except the null CLD) can be reached by walking _head->_next->...
@@ -102,6 +104,8 @@ class ClassLoaderDataGraph : public AllStatic {
   static void roots_cld_do(CLDClosure* strong, CLDClosure* weak);
   static void keep_alive_cld_do(CLDClosure* cl);
   static void always_strong_cld_do(CLDClosure* cl);
+  // Iteration through CLDG not by GC.
+  static void loaded_cld_do(CLDClosure* cl);
   // klass do
   // Walking classes through the ClassLoaderDataGraph include array classes.  It also includes
   // classes that are allocated but not loaded, classes that have errors, and scratch classes
@@ -211,6 +215,7 @@ class ClassLoaderData : public CHeapObj<mtClass> {
   };
 
   friend class ClassLoaderDataGraph;
+  friend class ClassLoaderDataGraphIterator;
   friend class ClassLoaderDataGraphKlassIteratorAtomic;
   friend class ClassLoaderDataGraphKlassIteratorStatic;
   friend class ClassLoaderDataGraphMetaspaceIterator;

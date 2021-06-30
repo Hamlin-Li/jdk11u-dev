@@ -70,7 +70,7 @@ public class CompressedClassSpaceSize {
                                                        "-Xlog:gc+metaspace=trace",
                                                        "-version");
             output = new OutputAnalyzer(pb.start());
-            output.shouldContain("Compressed class space size: 1048576")
+            output.shouldContain("Compressed class space size: 4194304")
                   .shouldHaveExitValue(0);
 
 

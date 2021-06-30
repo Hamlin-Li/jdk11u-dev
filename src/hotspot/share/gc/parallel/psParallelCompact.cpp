@@ -55,6 +55,7 @@
 #include "gc/shared/weakProcessor.hpp"
 #include "logging/log.hpp"
 #include "memory/iterator.inline.hpp"
+#include "memory/metaspaceUtils.hpp"
 #include "memory/resourceArea.hpp"
 #include "oops/access.inline.hpp"
 #include "oops/instanceClassLoaderKlass.inline.hpp"
@@ -1034,7 +1035,7 @@ void PSParallelCompact::post_compact()
 
   // Delete metaspaces for unloaded class loaders and clean up loader_data graph
   ClassLoaderDataGraph::purge();
-  MetaspaceUtils::verify_metrics();
+  DEBUG_ONLY(MetaspaceUtils::verify();)
 
   CodeCache::gc_epilogue();
   JvmtiExport::gc_epilogue();
@@ -1902,7 +1903,7 @@ bool PSParallelCompact::invoke_no_policy(bool maximum_heap_compaction) {
 
     young_gen->print_used_change(pre_gc_values.young_gen_used());
     old_gen->print_used_change(pre_gc_values.old_gen_used());
-    MetaspaceUtils::print_metaspace_change(pre_gc_values.metadata_used());
+    // MetaspaceUtils::print_metaspace_change(pre_gc_values.metadata_used()); // TODO
 
     // Track memory usage and detect low memory
     MemoryService::track_memory_usage();
